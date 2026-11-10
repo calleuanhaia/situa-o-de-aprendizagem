@@ -1,0 +1,153 @@
+CREATE DATABASE MEJDATABASE2;
+USE MEJDATABASE2;
+
+CREATE TABLE Cliente (
+	id_cliente INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    nome_cliente VARCHAR(100),
+    cidade VARCHAR(50),
+    uf VARCHAR(2),
+    nome_contato VARCHAR(100),
+    email VARCHAR(100),
+    segmento VARCHAR(50),
+    status VARCHAR(50)
+);
+
+CREATE TABLE Funcionario (
+	id_funcionario INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    nome_funcionario VARCHAR(100),
+    cargo VARCHAR(50),
+    departamento VARCHAR(50),
+    data_admissao DATE,
+    salario DECIMAL(10,2),
+    gestor VARCHAR(50)
+);
+
+CREATE TABLE Projeto (
+	id_projeto INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    nome_projeto VARCHAR(50),
+    id_cliente INT NOT NULL,
+    id_funcionario INT NOT NULL,
+    data_inicio DATE,
+    data_entrega DATE,
+    orcamento DECIMAL(10,2),
+    status VARCHAR(50),
+    modulo VARCHAR(50),
+    
+    CONSTRAINT fk_id_cliente_cliente FOREIGN KEY(id_cliente) REFERENCES Cliente (id_cliente),
+    CONSTRAINT fk_id_funcionario_funcionario FOREIGN KEY(id_funcionario) REFERENCES Funcionario (id_funcionario)
+);
+
+CREATE TABLE Chamado (
+	id_chamado INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    id_cliente INT NOT NULL,
+    id_funcionario INT NOT NULL,
+    data_abertura DATE,
+    categoria VARCHAR(50),
+    prioridade VARCHAR(50),
+    descricao VARCHAR(255),
+    status VARCHAR(50),
+    horas_gastas DOUBLE,
+    
+    CONSTRAINT fk_id_cliente_cliente2 FOREIGN KEY(id_cliente) REFERENCES Cliente (id_cliente),
+    CONSTRAINT fk_id_funcionario_funcionario2 FOREIGN KEY(id_funcionario) REFERENCES Funcionario (id_funcionario)
+);
+
+CREATE TABLE OP (
+	id_op INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    id_cliente INT NOT NULL,
+    produto VARCHAR(100),
+    quantidade INT,
+    unidade VARCHAR(2),
+    id_maquina INT,
+    data_inicio DATE,
+    data_fim DATE,
+    prioridade VARCHAR(50),
+    status VARCHAR(50),
+    
+    CONSTRAINT fk_id_cliente_cliente3 FOREIGN KEY(id_cliente) REFERENCES cliente (id_cliente)
+);
+
+CREATE TABLE apontamento (
+	id_apontamento INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    id_op INT NOT NULL,
+    id_maquina INT,
+    data DATE,
+    turno VARCHAR(10),
+    quantidade_produzida INT,
+    unidade VARCHAR(2),
+    horas_paradas DOUBLE,
+    motivo_parada VARCHAR(100),
+    operador VARCHAR(50),
+    
+    CONSTRAINT fk_id_op_op FOREIGN KEY(id_op) REFERENCES op (id_op)
+);
+
+INSERT INTO Cliente (ID_Cliente, Nome_Cliente, Cidade, UF, nome_contato, Email, Segmento, Status) VALUES
+(101, 'Madeireira Horizonte Ltda', 'Joaçaba', 'SC', 'Marina Lopes', 'marina@horizonte.com.br', 'Embalagens', 'Ativo'), 
+(102, 'Indústria Vale Azul', 'Chapecó', 'SC', 'Paulo Nunes', 'paulo@valeazul.com.br', 'Papel', 'Ativo'), 
+(103, 'Plastiflex do Oeste', 'Concórdia', 'SC', 'Rafael Mendes', NULL, 'Plásticos', 'Ativo'), 
+(104, 'Nova Era Alimentos.', 'Videira', 'SC', 'Ana Costa', 'ana@novaera.com.br', 'Alimentos', 'Em implantação'), 
+(105, 'Metalúrgica São Lucas', 'Curitiba', 'PR', 'Bruno Reis', 'bruno@saolucas.com.br', 'Metalurgia', 'Inativo'), 
+(106, 'Madeireira Horizonte Ltda', 'Joaçaba', 'SC', 'Marina Lopes', 'marina@horizonte.com.br', 'Embalagens', 'ATIVO'), 
+(107, 'Papelaria Central', 'Lages', 'SC', 'Carla Souza', 'carla@papelariacentral.com.br', 'Papel', 'Ativo'), 
+(108, 'Indústria Rio Verde', 'Chapecó', 'SC', 'Marcos Lima', 'marcos@rioverde.com.br', 'Embalagens', 'Ativo'), 
+(109, 'Alimentos Bom Sabor', 'Passo Fundo', 'RS', 'Fernanda Alves', 'fernanda@bomsabor.com.br', 'Alimentos', 'Ativo'), 
+(110, 'TecnoPack Embalagens', 'Joinville', 'SC', 'Diego Rocha', 'diego@tecnopack.com.br', 'Embalagens', 'Pendente');
+
+INSERT INTO Funcionario (ID_Funcionario, Nome_funcionario, Cargo, Departamento, Data_Admissao, Salario, Gestor) VALUES
+(1, 'Camila Duarte', 'Analista de Sistemas', 'Desenvolvimento', '2023-03-14', 5800.00, 'Renato Alves'), 
+(2, 'Renato Alves', 'Coordenador de Projetos', 'Projetos', '2021-01-10', 8500.00, NULL), 
+(3, 'Igor Martins', 'Desenvolvedor Junior', 'Desenvolvimento', '2024-08-02', 3800.00, 'Camila Duarte'), 
+(4, 'Luana Ferreira', 'Consultora PCP', 'Implantação', '2022-11-21', 5200.00, 'Renato Alves'), 
+(5, 'Pedro Lima', 'Suporte Técnico', 'Atendimento', '2025-05-05', 3200.00, 'Luana Ferreira'), 
+(6, 'Bianca Alves', 'Analista de Dados', 'Dados', '2024-02-12', 4900.00, 'Renato Alves'), 
+(7, 'Igor Martins', 'Desenvolvedor Junior', 'Desenvolvimento', '2024-08-02', 3800.00, 'Camila Duarte'),
+(8, 'Marcos Tavares', 'Desenvolvedor Pleno', 'Desenvolvimento', '2022-06-18', 6100.00, 'Camila Duarte'),
+(9, 'Júlia Mendes', 'Analista de Testes', 'Qualidade', '2023-09-07', 4500.00, 'Marcos Tavares'),
+(10, 'Diego Rocha', 'Técnico de Suporte', 'Atendimento', '2026-01-20', 3000.00, 'Luana Ferreira'); 
+
+INSERT INTO Projeto (ID_Projeto, Nome_Projeto, ID_Cliente, ID_funcionario, Data_Inicio, Data_Entrega, Orcamento, Status, Modulo) VALUES
+('001', 'PCP Web Fase 2', 101, 1, '2026-02-03', '2026-11-30', 85000.00, 'Em andamento', 'Programação'),
+('002', 'Implantação MRP', 102, 4, '2026-04-15', '2026-12-15', 64000.00, 'Em teste', 'Materiais'), 
+('003', 'Apontamento Mobile', 104, 3, '2026-05-10', '2027-01-20', 47000.50, 'Planejado', 'Chão de fábrica'), 
+('004', 'Dashboard de Eficiência', 103, 2, '2026-06-01', '2026-10-31', 31500.00, 'Bloqueado', 'Indicadores OEE'), 
+('005', 'Integração ERP', 105, 5, '2025-12-01', '2026-08-30', 52000.00, 'Concluido', 'Integração SAP'), 
+('006', 'Controle de Estoque', 107, 6, '2026-07-20', '2026-12-20', 39000.00, 'Em andamento', 'Estoque'),
+('007', 'Programação de Máquinas', 108, 4, '2026-08-01', '2027-02-28', 72000.00, 'Planejado', 'Programação'), 
+('008', 'Portal de Pedidos', 110, 3, '2026-09-15', '2027-03-15', 56000.00, 'Em desenvolvimento', 'Comercial'), 
+('009', 'Indicadores de Produção', 109, 6, '2026-10-01', '2027-01-31', 42000.00, 'Em andamento', 'BI');
+
+INSERT INTO Chamado (ID_Chamado, ID_Cliente, ID_Funcionario, Data_Abertura, Categoria, Prioridade, Descricao, Status, Horas_Gastas) VALUES
+('001', 101, 5, '2026-10-01', 'Erro de programação', 'Alta', 'Máquina alocada em duas ordens no mesmo horário', 'Aberto', 2.5), 
+('002', 102, 1, '2026-10-01', 'Relatório', 'Média', 'Exportação para Excel apresenta colunas fora de ordem', 'Em atendimento', 3), 
+('003', 103, 3, '2026-10-02', 'Desempenho', 'Critica', 'Dashboard demora mais de 40 segundos para carregar', 'Pendente', 4), 
+('004', 104, 9, '2026-10-05', 'Melhoria', 'Baixa', 'Adicionar filtro por turno no apontamento', 'Novo', 0), 
+('005', 102, 1, '2026-10-06', 'Integração', 'Alta', 'Ordens do ERP não aparecem na programação', 'Em atendimento', 3.75),
+('006', 107, 6, '2026-10-06', 'Estoque', 'Média', 'Saldo do sistema diverge do saldo fisico', 'Resolvido', 5), 
+('007', 108, 4, '2026-10-07', 'Programação', 'Alta', 'Sistema não considera o tempo de troca de produto', 'Aberto', 6),
+('008', 110, 5, '2026-10-07', 'Login', 'Baixa', 'Usuário bloqueado após alterar a senha', 'Resolvido', 1),
+('009', 109, 3, '2026-10-08', 'Relatório', 'Média', 'Total produzido diferente do relatório diário', 'Em atendimento', 2), 
+('010', 103, 6, '2026-10-08', 'Integração', 'Critica', 'Não foi possivel importar arquivo CSV', 'ABERTO', 7);
+
+INSERT INTO OP (ID_OP, ID_Cliente, Produto, Quantidade, Unidade, ID_Maquina, Data_Inicio, Data_Fim, Prioridade, Status) VALUES
+(70031, 101, 'Papel Kraft 120 g/m2', 12000, 'kg', '01', '2026-10-09 06:00:00', '2026-10-09 18:00:00', NULL, 'Liberada'), 
+(70032, 102, 'Bobina Testliner 150 g/m2', 8500, 'kg', '02', '2026-10-09 14:00:00', '2026-10-10 02:00:00', 'Alta', 'Programada'), 
+(70033, 104, 'Caixa onda B', 5000, 'un', '03', '2026-10-10 07:00:00', '2026-10-10 15:00:00', '2', 'Em produção'), 
+(70034, 103, 'Filme PEBD 80 micras', 3200, 'kg', '02', '2026-10-11 22:00:00', '2026-10-12 06:00:00', 'Urgente', 'Aguardando material'), 
+(70035, 102, 'Bobina Testliner 150 g/m2', 9000, 'kg', '02', '2026-10-12 06:00:00', '2026-10-12 18:00:00', '3', 'Planejada'), 
+(70036, 101, 'Papel Kraft 120 g/m2', 6500, 'kg', '01', '2026-10-10 06:00:00', '2026-10-10 12:30:00', '2', 'Concluida'), 
+(70037, 108, 'Papel Reciclado 10 g/m2', 15000, 'kg', '01', '2026-10-13 06:00:00', '2026-10-13 21:00:00', '1', 'Liberada'), 
+(70038, 107, 'Papelão Ondulado', 7000, 'kg', '03', '2026-10-14 07:00:00', '2026-10-14 17:00:00', '2', 'Planejada'), 
+(70039, 110, 'Papel Kraft 100 g/m2', 11000, 'kg', '02', '2026-10-15 06:00:00', '2026-10-15 19:00:00', 'Alta', 'Programada'), 
+(70040, 109, 'Embalagem Alimenticia', 8000, 'un', '03', '2026-10-16 08:00:00', '2026-10-16 18:00:00', '3', 'Nova'); 
+
+INSERT INTO Apontamento (ID_Apontamento, ID_OP, ID_Maquina, Data, Turno, Quantidade_Produzida, Unidade, Horas_Paradas, Motivo_Parada, Operador) VALUES
+('001', 70031, '01', '2026-10-09', '1', 4800, 'kg', 0.5, 'Troca de bobina', 'João Silva'), 
+('002', 70032, '02', '2026-10-09', '2', 3200, 'kg', 0.75, 'Falha no sensor', 'Marcos Lima'), 
+('003', 70033, '03', '2026-10-10', 'Noite', 2800, NULL, NULL, 'Falta de matéria-prima', 'Bianca Alves'),
+('004', 70034, '02', '2026-10-11', '3', 0, 'kg', 8, 'Aguardando material', 'Diego Rocha'), 
+('005', 70035, '02', '2026-10-12', '1', 4600, 'kg', 0, NULL, 'Marcos Lima'), 
+('006', 70036, '01', '2026-10-10', '1', 6500, 'kg', 0.25, 'Limpeza', 'João Silva'), 
+('007', 70037, '01', '2026-10-13', '2', 7200, 'kg', 1.5, 'Ajuste de gramatura', 'João Silva'), 
+('008', 70038, '03', '2026-10-14', '1', 4000, 'kg', 0.5, 'Troca de ferramenta', 'Bianca Alves'),
+('009', 70039, '02', '2026-10-15', '2', 5100, 'kg', 2, 'Manutenção corretiva', 'Marcos Lima'); 
